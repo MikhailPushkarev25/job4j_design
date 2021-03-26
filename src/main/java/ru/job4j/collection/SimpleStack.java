@@ -9,12 +9,22 @@ package ru.job4j.collection;
  */
 public class SimpleStack<E> {
     private ForwardLinked<E> linked = new ForwardLinked<>();
+    private int size;
+
+    /**
+     * Счетчик для добавления и удаления очереди
+     * @return - вернуть индекс
+     */
+    public int getSize() {
+        return size;
+    }
 
     /**
      * Метод возвращает из связновго списка метод deleteFirst, удаляем из начала
      * @return - вернуть результат
      */
     public E pop() {
+        size--;
         return linked.deleteFirst();
     }
 
@@ -25,5 +35,6 @@ public class SimpleStack<E> {
      */
     public void push(E value) {
         linked.addFirst(value);
+        size++;
     }
 }
