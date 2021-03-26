@@ -32,6 +32,21 @@ public class ForwardLinked<E> implements Iterable<E> {
     }
 
     /**
+     * Метод добавляет элемент в начало и дальше
+     * @param value
+     */
+    public void addFirst(E value) {
+       Node<E> node = new Node<>(value, null);
+       if (value == null) {
+           head = node;
+       } else {
+           node.next = head;
+           head = node;
+
+       }
+    }
+
+    /**
      * Метод сначала проверяет на наличие элемента, если его нет то падает исключение
      * иначе в переменную добавляю head
      * приравниваю след элемент
