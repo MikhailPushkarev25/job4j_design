@@ -62,6 +62,34 @@ public class ForwardLinked<E> implements Iterable<E> {
         res.next = null;
         return res.value;
     }
+
+    /**
+     * Метод переворачивает односвязный список чисел, то есть я создал три ноды.
+     * в одну добавил голову,
+     * в цикле while я проверяю что в голове есть какой либо элемент значит выполняем условие инче
+     * нет, далее я в переменную next добавляю элемент и следую дальше,
+     * далее я в следующий узел добавлю нул элемент то есть мы прошли по узлу и остановились,
+     * далее мы начинаем идти в обратном порядке в переменную prev добавляю элемент то есть идем
+     * в обратном направлении, поэтому в current добавляю next и тд. кода мы проходим
+     * в обратном порядке то привниваю в ссылочную переменную предыдущий эелемент
+     */
+    public boolean revert() {
+       Node<E> next = null;
+       Node<E> prev = null;
+       Node<E> current = head;
+       boolean b = false;
+       if (!b) {
+           while (current != null) {
+               next = current.next;
+               current.next = prev;
+               prev = current;
+               current = next;
+           }
+       }
+       head = prev;
+       return b;
+    }
+
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
