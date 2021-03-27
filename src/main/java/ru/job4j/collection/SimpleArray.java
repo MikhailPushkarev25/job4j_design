@@ -30,12 +30,14 @@ public class SimpleArray<T> implements Iterable<T> {
      * то у нас создается массив в два раза больше и старые элементы копируются в новый.
      * @param model - принимает элемент.
      */
+    @SuppressWarnings("checkstyle:MethodParamPad")
     public void add (T model) {
         if (obj.length <= count) {
             Arrays.copyOf(obj, obj.length * 2);
         }
-         obj[count++] = model;
+         obj[count] = model;
         size++;
+        count++;
     }
 
     /**
@@ -57,7 +59,7 @@ public class SimpleArray<T> implements Iterable<T> {
 
             @Override
             public boolean hasNext() {
-                return var < i;
+                return var != size;
             }
 
             @Override
@@ -66,7 +68,7 @@ public class SimpleArray<T> implements Iterable<T> {
                     throw new NoSuchElementException();
                 }
 
-                if (var != size) {
+                if (i != size) {
                     throw new ConcurrentModificationException();
                 }
                 return (T) obj[var++];
