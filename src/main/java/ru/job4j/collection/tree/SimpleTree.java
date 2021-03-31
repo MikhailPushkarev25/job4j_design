@@ -3,6 +3,7 @@ package ru.job4j.collection.tree;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.function.Predicate;
 
 /**
  * @author Mikhail Pushkarev
@@ -24,25 +25,36 @@ public class SimpleTree<E> implements Tree<E> {
         boolean b = false;
         Optional<Node<E>> optional = findBy(child);
         if (optional.isEmpty() && findBy(parent).isPresent()) {
-           findBy(parent).get().children.add(new Node<>(child));
-           b = true;
+            findBy(parent).get().children.add(new Node<>(child));
+            b = true;
         }
         return b;
     }
 
     @Override
     public Optional<Node<E>> findBy(E value) {
-        Optional<Node<E>> rsl = Optional.empty();
+       return findByPredicate(el -> el.value.equals(value));
+    }
+
+    public boolean isBinary() {
+        return findByPredicate(el -> el.children.size() > 2).isEmpty();
+    }
+
+
+    private Optional<Node<E>> findByPredicate(Predicate<Node<E>> condition) {
+        Optional<Node<E>> node = Optional.empty();
         Queue<Node<E>> data = new LinkedList<>();
         data.offer(this.root);
         while (!data.isEmpty()) {
             Node<E> el = data.poll();
-            if (el.value.equals(value)) {
-                rsl = Optional.of(el);
+            if (condition.test(el)) {
+                node = Optional.of(el);
                 break;
             }
             data.addAll(el.children);
         }
-        return rsl;
+        return node;
     }
 }
+
+
