@@ -33,7 +33,6 @@ public class LogFilter {
     }
 
     public static void save(List<String> log, String file) {
-        List<String> list = new ArrayList<>();
         try (PrintWriter pw = new PrintWriter(
                 new BufferedOutputStream(
                         new FileOutputStream(file)
