@@ -1,7 +1,7 @@
 package ru.job4j.io;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import javax.print.DocFlavor;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +12,8 @@ import java.util.List;
  * В классе прдставлена система чтения файла
  * в файле есть некие строки, нужно из строк выбрать предпоследнее число 404
  * прочитать
+ *
+ * Так же добавил метод который записывает результат первого метода в файл
  */
 public class LogFilter {
 
@@ -30,8 +32,24 @@ public class LogFilter {
         return list;
     }
 
+    public static void save(List<String> log, String file) {
+        List<String> list = new ArrayList<>();
+        try (PrintWriter pw = new PrintWriter(
+                new BufferedOutputStream(
+                        new FileOutputStream(file)
+                ))) {
+            for (String str : log) {
+                pw.write(str);
+                pw.write(System.lineSeparator());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         List<String> log = filter("log.txt");
         System.out.println(log);
+        save(log, "404.txt");
     }
 }
