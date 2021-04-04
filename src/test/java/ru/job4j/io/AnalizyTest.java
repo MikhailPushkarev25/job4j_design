@@ -1,9 +1,10 @@
 package ru.job4j.io;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,22 +13,27 @@ import static org.junit.Assert.*;
 
 public class AnalizyTest {
 
-    @Test
-    public void whenTestIntervalLog() {
-        String log = "./src/main/source.log";
-        String path = "./src/main/dest.lg";
-        Analizy analizy = new Analizy();
-       List<String> expected  = new ArrayList<>();
-       expected.add("10:57:01;10:58:01");
-       expected.add("11:01:02;11:02:02");
-       List<String> result = new ArrayList<>();
-       analizy.unavailable(log, path);
-       try (BufferedReader bf = new BufferedReader(new FileReader(path))) {
-           bf.lines().forEach(result::add);
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-       assertThat(result, is(expected));
+    @Rule
+    public  TemporaryFolder folder = new TemporaryFolder();
 
+    @Test
+    public void whenTestIntervalLog() throws IOException {
+        File source = folder.newFile("source.log");
+        File target = folder.newFile("dest.lg");
+        try (PrintWriter out = new PrintWriter(source)) {
+            out.println("200 10:56:01");
+            out.println("400 10:57:01");
+            out.println("200 10:58:01");
+            out.println("200 10:59:01");
+            out.println("500 11:01:02");
+            out.println("200 11:02:02");
+        }
+       Analizy analizy = new Analizy();
+        analizy.unavailable(source.getAbsolutePath(), target.getAbsolutePath());
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(target))) {
+            reader.lines().forEach(builder::append);
+        }
+        assertThat(builder.toString(), is("10:57:01;10:58:01" + "11:01:02;11:02:02"));
     }
 }
