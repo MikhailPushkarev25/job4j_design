@@ -15,8 +15,11 @@ import java.util.function.Predicate;
  */
 public class Search {
     public static void main(String[] args) throws IOException {
-        Path start = Paths.get(".");
-        search(start, p -> p.toFile().getName().endsWith("js")).forEach(System.out::println);
+        if (args.length < 2) {
+            throw new IllegalArgumentException("Root folder is null");
+        }
+        Path start = Paths.get(args[0]);
+        search(start, args[1]).forEach(System.out::println);
     }
 
     /**
@@ -24,12 +27,11 @@ public class Search {
      * и Predicate
      * Обьект класса SearchFile принимает предикат
      * @param root
-     * @param condition
      * @return
      * @throws IOException
      */
-    public static List<Path> search(Path root, Predicate<Path> condition) throws IOException {
-        SearchFiles files = new SearchFiles(condition);
+    public static List<Path> search(Path root, String str) throws IOException {
+        SearchFiles files = new SearchFiles(p -> p.toFile().getName().endsWith(str));
         Files.walkFileTree(root, files);
         return files.getList();
     }
