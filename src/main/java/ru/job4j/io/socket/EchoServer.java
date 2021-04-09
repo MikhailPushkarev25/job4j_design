@@ -11,26 +11,32 @@ import java.net.Socket;
  * В классе представлен пример работы клиента и сервера
  * с помощью порта мы узнаем положение сервера
  * далее мы записываем и читаем данные в сервер при наборе слова bye - сервер закрывается
+ * так же я рефакторил код, теперь при вводе определенного слова. Случается ответ от клиента
+ * так же при вводе Exit сервер прекращает работу
  */
 public class EchoServer {
+    @SuppressWarnings("checkstyle:InnerAssignment")
     public static void main(String[] args) throws IOException {
         try (ServerSocket server = new ServerSocket(9000)) {
-            boolean flag = true;
-            while (flag) {
+            while (!server.isClosed()) {
                 Socket socket = server.accept();
                 try (OutputStream out = socket.getOutputStream();
                      BufferedReader in = new BufferedReader(
                              new InputStreamReader(socket.getInputStream()))) {
                     String str;
                     while (!(str = in.readLine()).isEmpty()) {
-                        if (str.equals("Bye")) {
-                            socket.close();
-                            flag = false;
+                        if (str.contains("Hello")) {
+                            out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+                            out.write("Hello".getBytes());
+                        } else if(str.contains("Exit")) {
+                            server.isClosed();
                             break;
+                        } else if(str.contains("Any")) {
+                            out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+                            out.write("What ".getBytes());
                         }
-                        System.out.println(str);
                     }
-                    out.write("HTTP/1.1 200 OK\r\n".getBytes());
+                    out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                 }
             }
         }
