@@ -3,6 +3,8 @@ package ru.job4j.io.socket;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 /**
  * @author Mikhail Pushkarev
@@ -15,6 +17,8 @@ import java.net.Socket;
  * так же при вводе Exit сервер прекращает работу
  */
 public class EchoServer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(EchoServer.class.getName());
     @SuppressWarnings("checkstyle:InnerAssignment")
     public static void main(String[] args) throws IOException {
         try (ServerSocket server = new ServerSocket(9000)) {
@@ -37,6 +41,8 @@ public class EchoServer {
                         }
                     }
                     out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+                } catch (Exception e) {
+                    LOG.error("Exception in log example: " + e);
                 }
             }
         }
