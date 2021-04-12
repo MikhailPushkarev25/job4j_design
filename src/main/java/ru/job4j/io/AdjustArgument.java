@@ -1,42 +1,64 @@
 package ru.job4j.io;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AdjustArgument {
+    private String[] args;
+    private Map<String, String> map = new HashMap<>();
 
-    private String directory;
-    private String name;
-    private String type;
-    private String result;
+    AdjustArgument(String[] args) {
+        this.args = args;
+    }
 
-    public AdjustArgument(String[] args) {
-        for (String str : args) {
-            String[] line = str.split("=");
-            if (line.length == 2) {
-                if (line[0].equals("-d")) {
-                    directory = line[1];
-                } else if (line[0].equals("-n")) {
-                    name = line[1];
-                } else if (line[0].equals("-t")) {
-                    type = line[1];
-                } else if (line[0].equals("-o")) {
-                    result = line[1];
-                }
+    public void attributes(String[] args) {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].substring(1).equals("m")
+                    || (args[i].substring(1).equals("r")
+                    || (args[i].substring(1).equals("f")))) {
+                map.put(args[i].substring(1), null);
+            } else if (args[i].substring(1).equals("n")
+                           || (args[i].substring(1).equals("o")
+                           || (args[i].substring(1).equals("d")))) {
+                map.put(args[i].substring(1), args[i + 1]);
             }
         }
     }
 
-    public String getDirectory() {
-        return directory;
+    public Map<String, String> getMap() {
+        return map;
     }
 
-    public String getName() {
-        return name;
+    public String valid(String args) {
+        if (!map.containsKey(args)) {
+            throw new IllegalArgumentException("Not found");
+        }
+        return map.get(args);
     }
 
-    public String getType() {
-        return type;
+    public String mask() {
+        return valid("m");
     }
 
-    public String getResult() {
-        return result;
+    public String regex() {
+        return valid("r");
     }
+
+    public String full() {
+        return valid("f");
+    }
+
+    public String name() {
+        return valid("n");
+    }
+
+    public String write() {
+        return valid("o");
+    }
+
+    public String directory() {
+        return valid("d");
+    }
+
+
 }

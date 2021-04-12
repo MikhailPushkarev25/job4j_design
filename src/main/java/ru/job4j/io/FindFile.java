@@ -1,52 +1,79 @@
 package ru.job4j.io;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.util.regex.Pattern;
 
 public class FindFile {
 
-    public List<File> files(Path path, String type, String name) throws IOException {
-        Predicate<Path> predicate;
-        if (type.equals("name")) {
-            predicate = p -> p.toFile().getName().endsWith(name);
-        } else {
-            predicate = p -> p.toFile().getName().matches(name);
+    private Predicate<Path> searchCondition(AdjustArgument args) {
+        Predicate<Path> predicate = null;
+        if (args.getMap().containsKey(args.full())) {
+            predicate = new RegexSearch(args.name());
+        } else if (args.getMap().containsKey(args.mask())) {
+            predicate = new RegexSearch(pattern(args.name()));
+        } else if (args.getMap().containsKey(args.name())) {
+            predicate = new RegexSearch(args.name());
         }
-
-        List<Path> list = Searcher.listFile(path, predicate);
-        List<File> file = new ArrayList<>();
-        for (Path paths : list) {
-            File files = Paths.get(paths.toString()).toFile();
-            file.add(files);
-        }
-        return file;
+        return predicate;
     }
 
-    public void packFile(List<File> list, File target) {
-        try (ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(target)))) {
-            for (File source : list) {
-                zip.putNextEntry(new ZipEntry(source.getPath()));
-                try (BufferedInputStream buf = new BufferedInputStream(new FileInputStream(source))) {
-                    zip.write(buf.readAllBytes());
-                }
+    public List<File> search(AdjustArgument args) throws IOException {
+        SearcherFile searcher = new SearcherFile(searchCondition(args));
+        Path path = Paths.get(args.directory());
+        Files.walkFileTree(path, searcher);
+        return searcher.getResult();
+    }
+
+    public void write(List<File> files, AdjustArgument args) {
+        try (PrintWriter pw = new PrintWriter(new BufferedOutputStream(new FileOutputStream(args.write())))) {
+            for (File file : files) {
+                pw.print(file.getName() + System.lineSeparator());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public static String pattern(String str) {
+        StringBuilder string = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            char a = str.charAt(i);
+            if (a == '*') {
+                string.append(".*");
+            } else if (a == '.') {
+                string.append("\\.");
+            } else {
+                string.append(a);
+            }
+        }
+        return string.toString();
+    }
+
     public static void main(String[] args) throws IOException {
+        FindFile findFile = new FindFile();
         AdjustArgument argument = new AdjustArgument(args);
-        FindFile file = new FindFile();
-        Path path = Paths.get(argument.getDirectory());
-        List<File> files = file.files(path, argument.getType(), argument.getName());
-        File targFile = new File(argument.getResult());
-        file.packFile(files, targFile);
+        argument.attributes(args);
+        List<File> file = findFile.search(argument);
+        findFile.write(file, argument);
+    }
+
+
+    private static class RegexSearch implements Predicate<Path> {
+        private Pattern pattern;
+
+        @Override
+        public boolean test(Path path) {
+            return pattern.matcher(path.toFile().getName()).matches();
+        }
+
+        public RegexSearch(String name) {
+            this.pattern = Pattern.compile(name);
+        }
     }
 }
+
