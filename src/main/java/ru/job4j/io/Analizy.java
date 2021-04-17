@@ -28,7 +28,7 @@ public class Analizy {
                if (!b && (str[0].equals("400") || str[0].equals("500"))) {
                    writer.print(str[1] + ";");
                    b = true;
-               } else if(b && (str[0].equals("200") || str[0].equals("300"))) {
+               } else if (b && (str[0].equals("200") || str[0].equals("300"))) {
                    writer.println(str[1]);
                    b = false;
                }

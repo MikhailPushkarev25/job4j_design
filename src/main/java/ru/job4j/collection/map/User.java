@@ -41,7 +41,7 @@ public class User {
         User user = new User("Mikhail", 10, new GregorianCalendar(1995, 12, 5));
         User user1 = new User("Mikhail", 10, new GregorianCalendar(1995, 12, 5));
 
-        Map<User,Object> one = new HashMap<>();
+        Map<User, Object> one = new HashMap<>();
         one.put(user, "Mikhail");
         one.put(user1, "Mikhail");
         for (User val : one.keySet()) {

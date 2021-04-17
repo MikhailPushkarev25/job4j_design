@@ -31,7 +31,7 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param model - принимает элемент.
      */
     @SuppressWarnings("checkstyle:MethodParamPad")
-    public void add (T model) {
+    public void add(T model) {
         if (obj.length <= count) {
             Arrays.copyOf(obj, obj.length * 2);
         }

@@ -28,14 +28,15 @@ public class EchoServer {
                      BufferedReader in = new BufferedReader(
                              new InputStreamReader(socket.getInputStream()))) {
                     String str;
-                    while (!(str = in.readLine()).isEmpty()) {
+                    while (true) {
+                        str = in.readLine();
                         if (str.contains("Hello")) {
                             out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                             out.write("Hello".getBytes());
-                        } else if(str.contains("Exit")) {
+                        } else if (str.contains("Exit")) {
                             server.isClosed();
                             break;
-                        } else if(str.contains("Any")) {
+                        } else if (str.contains("Any")) {
                             out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                             out.write("What ".getBytes());
                         }
