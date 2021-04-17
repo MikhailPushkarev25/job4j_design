@@ -36,11 +36,11 @@ select * from product where date_part('month', expired_date) = date_part('month'
 
 select * from product where price = (select max(price) from product);
 
-select t.name, count(t.id) from type t join product p on t.id = p.type_id group by t.name;
+select t.name, count(p.id) from type t join product p on t.id = p.type_id group by t.name;
 
 select * from product p join type t on t.id = p.type_id where t.name in ('Сыр', 'Молоко');
 
-select t.name, count(t.id) from type t join product p on t.id = p.type_id group by t.name having count(t.id) < 10;
+select t.name, count(p.id) from type t join product p on t.id = p.type_id group by t.name having count(t.id) < 10;
 
 select * from type;
 
