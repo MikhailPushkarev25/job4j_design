@@ -9,14 +9,14 @@ create table emploees(
 	department_id int references departments(id)
 );
 
-insert into departments(name) values ('Кухня');
-insert into departments(name) values ('Бар');
-insert into departments(name) values ('Зал');
+insert into departments(name) values ('пїЅпїЅпїЅпїЅпїЅ');
+insert into departments(name) values ('пїЅпїЅпїЅ');
+insert into departments(name) values ('пїЅпїЅпїЅ');
 
-insert into emploees(name, department_id) values ('Алексей', 1);
-insert into emploees(name, department_id) values ('Владимир', 2);
-insert into emploees(name, department_id) values ('Мария', 3);
-insert into emploees(name, department_id) values ('Василий', null);
+insert into emploees(name, department_id) values ('пїЅпїЅпїЅпїЅпїЅпїЅпїЅ', 1);
+insert into emploees(name, department_id) values ('пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ', 2);
+insert into emploees(name, department_id) values ('пїЅпїЅпїЅпїЅпїЅ', 3);
+insert into emploees(name, department_id) values ('пїЅпїЅпїЅпїЅпїЅпїЅпїЅ', null);
 
 select * from departments d left join emploees e on d.id = e.department_id;
 
@@ -34,17 +34,17 @@ select * from departments d right join emploees e on e.department_id = d.id;
 
 create table teens(
 	name varchar(100),
-	gender char(10)
+	gender varchar(100)
 );
 
-insert into teens(name, gender) values (1, 2);
-insert into teens(name, gender) values (3, 4);
-insert into teens(name, gender) values (5, 6);
-insert into teens(name, gender) values (7, 8);
-insert into teens(name, gender) values (9, 10);
+insert into teens(name, gender) values ('Р•Р»РµРЅР°', 'Р–');
+insert into teens(name, gender) values ('РќРёРєРѕР»Р°Р№', 'Рњ');
+insert into teens(name, gender) values ('Р’РёРєС‚РѕСЂРёСЏ', 'Р–');
+insert into teens(name, gender) values ('Р’Р°СЃРёР»РёР№', 'Рњ');
+insert into teens(name, gender) values ('Р•РєР°С‚РµСЂРёРЅР°', 'Р–');
 
 
-select t1.name, concat(t1.gender, t2.gender) as a, t2.name from teens t1 cross join teens t2;
+select * from teens t1 cross join teens t2 where t1.gender != t1.gender;
 
 
 
