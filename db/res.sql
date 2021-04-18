@@ -1,0 +1,1 @@
+insert into users(name, mail) values ('mi', 123);
