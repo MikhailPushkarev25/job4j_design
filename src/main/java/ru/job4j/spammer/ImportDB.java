@@ -42,7 +42,7 @@ public class ImportDB {
         )) {
             for (User user : users) {
                 try (PreparedStatement ps = cnt.prepareStatement(
-                        "insert into users(name, mail) values (?, ?) ")) {
+                        "insert into users(name, mail) values (?,?) ")) {
                     ps.setString(1, user.name);
                     ps.setString(2, user.mail);
                     ps.execute();
