@@ -25,7 +25,9 @@ public class ImportDB {
         try (BufferedReader rd = new BufferedReader(new FileReader(dump))) {
             rd.lines().forEach(line -> {
                 String[] str = line.split(";");
-                users.add(new User(str[0], str[1]));
+                if (str.length == 2) {
+                    users.add(new User(str[0], str[1]));
+                }
             });
         }
         return users;
@@ -40,9 +42,9 @@ public class ImportDB {
         )) {
             for (User user : users) {
                 try (PreparedStatement ps = cnt.prepareStatement(
-                        "insert into users(name, mail) values (?,?) ")) {
+                        "insert into users(name, mail) values (?, ?) ")) {
                     ps.setString(1, user.name);
-                    ps.setString(1, user.mail);
+                    ps.setString(2, user.mail);
                     ps.execute();
                 }
             }
